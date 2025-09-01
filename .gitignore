@@ -1,0 +1,9 @@
+# Environment variables
+backend/.env
+
+# Python virtual environment
+venv/
+__pycache__/
+
+# Frontend build artifacts
+node_modules/
