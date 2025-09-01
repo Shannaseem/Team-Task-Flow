@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TaskFlow Sign Up</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="centered-container">
+      <div class="form-container">
+        <div class="form-header">
+          <i class="fas fa-users form-icon"></i>
+          <h1>Create Your Team</h1>
+          <p>Enter your details to create a new team and get started.</p>
+        </div>
+        <form id="signup-form">
+          <div class="form-group">
+            <label for="tenant-name">Team Name</label>
+            <input
+              id="tenant-name"
+              type="text"
+              placeholder="Your team's name"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="email">Admin Email</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="Your email (team admin)"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Set a strong password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-full mt-4">
+            Sign Up
+          </button>
+        </form>
+        <p class="form-link-text">
+          Already have an account? <a href="index.html">Login</a>
+        </p>
+      </div>
+    </div>
+
+    <div id="message-modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <h2 id="modal-title"></h2>
+        <p id="modal-message"></p>
+        <div class="button-group">
+          <button id="modal-ok-button" class="btn btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="js/auth.js"></script>
+    <script type="module" src="js/utils.js"></script>
+  </body>
+</html>

@@ -1,0 +1,557 @@
+/*
+ * styles.css - Task Management Dashboard Theme
+ * Inspired by the provided image for a modern, dark, and professional look.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+:root {
+  /* Colors inspired by the image */
+  --primary-purple: #9b59b6; /* Main highlight purple */
+  --accent-purple: #8e44ad; /* Darker purple for accents */
+  --background-dark: #1f253a; /* Main dark background */
+  --card-background: #2b324b; /* Lighter dark for cards */
+  --sidebar-background: #2b324b; /* Sidebar matches card */
+  --header-background: #2b324b; /* Header matches card */
+  --text-light: #ecf0f1; /* Light text for readability */
+  --text-medium: #bdc3c7; /* Medium text for secondary info */
+  --text-dark: #7f8c8d; /* Darker text for less emphasis */
+  --border-color: #34495e; /* Subtle border color */
+  --input-background: #34495e; /* Input fields background */
+  --success-color: #55efc4; /* Green for success/completed */
+  --danger-color: #ff7675; /* Red for error/overdue */
+
+  /* Additional colors based on design system best practices */
+  --info-blue: #3498db; /* Blue for informational messages */
+}
+
+/* Base styles and fonts */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--background-dark);
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background-color: var(--card-background);
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  text-align: center;
+}
+
+.modal-content h2 {
+  color: var(--text-light);
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.modal-content p {
+  color: var(--text-medium);
+  margin-bottom: 20px;
+}
+
+.modal-content .button-group {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-content.success {
+  border-top: 5px solid var(--success-color);
+}
+.modal-content.error {
+  border-top: 5px solid var(--danger-color);
+}
+.modal-content.info {
+  border-top: 5px solid var(--info-blue);
+}
+
+.confirm-buttons {
+  display: none;
+}
+
+/* Main container styles */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: var(--sidebar-background);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  color: var(--primary-purple);
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+}
+
+.sidebar h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.main-nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.main-nav li {
+  padding: 12px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-medium);
+}
+
+.main-nav li:hover,
+.main-nav li.active {
+  background-color: var(--border-color);
+  color: var(--text-light);
+}
+
+.nav-icon {
+  width: 20px;
+  text-align: center;
+}
+
+/* Main content area */
+.main-content {
+  flex-grow: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#user-info {
+  color: var(--text-medium);
+}
+
+#user-info strong {
+  color: var(--text-light);
+}
+
+.action-bar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Summary Cards */
+.task-summary-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.summary-card {
+  background-color: var(--card-background);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.summary-card h2 {
+  font-size: 2.5rem;
+  color: var(--primary-purple);
+  margin-bottom: 5px;
+}
+
+.summary-card p {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+/* Kanban Board Styles */
+.kanban-board-section {
+  flex-grow: 1;
+}
+
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.kanban-column {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  padding: 15px;
+  min-height: 400px;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+.column-header h3 {
+  color: var(--text-light);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.task-count {
+  background-color: var(--primary-purple);
+  color: var(--text-light);
+  padding: 3px 8px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 350px;
+}
+
+.task-card {
+  background-color: var(--border-color);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative; /* For the edit/delete buttons */
+}
+
+.task-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.task-card.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.task-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--text-light);
+}
+
+.task-description {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+}
+
+.task-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--text-dark);
+}
+
+.task-assigned-user {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.task-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none; /* Default hidden */
+  gap: 5px;
+}
+
+.task-card:hover .task-actions {
+  display: flex; /* Show on hover */
+}
+
+.task-actions button {
+  background-color: transparent;
+  border: none;
+  color: var(--text-medium);
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.task-actions button:hover {
+  color: var(--primary-purple);
+}
+
+.no-tasks-message {
+  color: var(--text-medium);
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* Form Styles (for modals and other pages) */
+.centered-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.form-container {
+  background-color: var(--card-background);
+  padding: 40px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 450px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.form-header {
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-icon {
+  font-size: 2.5rem;
+  color: var(--primary-purple);
+  margin-bottom: 10px;
+}
+
+.form-container h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: var(--text-light);
+}
+
+.form-container p {
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+.form-container form {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  text-align: left;
+  width: 100%;
+}
+
+.form-group label {
+  display: block;
+  color: var(--text-light);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-background);
+  color: var(--text-light);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-purple);
+}
+
+/* Buttons */
+.btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary-purple);
+  color: var(--text-light);
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-purple);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--text-medium);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--border-color);
+  color: var(--text-light);
+}
+
+.btn-sm {
+  padding: 8px 15px;
+  font-size: 0.9rem;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.mt-4 {
+  margin-top: 20px;
+}
+
+.form-link-text {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--text-medium);
+}
+
+.form-link-text a {
+  color: var(--primary-purple);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* New CSS for members list and button */
+.members-list-ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+}
+
+.members-list-ul li {
+  background-color: var(--input-background);
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border-color);
+}
+
+.members-list-ul li span.email {
+  flex-grow: 1;
+  color: var(--text-light);
+}
+
+.members-list-ul li span.role {
+  font-size: 0.8rem;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.members-list-ul li span.role.admin {
+  background-color: var(--primary-purple);
+  color: white;
+}
+
+.members-list-ul li span.role.member {
+  background-color: var(--text-dark);
+  color: white;
+}
+
+.members-list-ul li button.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  transition: background-color 0.3s ease;
+}
+
+.members-list-ul li button.btn-danger:hover {
+  background-color: #d63031;
+}

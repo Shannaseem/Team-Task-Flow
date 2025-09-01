@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TeamFlow Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo-section">
+          <i class="fas fa-sitemap logo-icon"></i>
+          <h3 id="tenant-name">TaskFlow</h3>
+        </div>
+        <nav class="main-nav">
+          <ul>
+            <li id="all-tasks-link" class="active">
+              <i class="fas fa-th-list nav-icon"></i> All Tasks
+            </li>
+            <li id="my-tasks-link">
+              <i class="fas fa-user nav-icon"></i> My Tasks
+            </li>
+            <li id="invite-link">
+              <i class="fas fa-user-plus nav-icon"></i> Invite User
+            </li>
+            <li id="settings-link">
+              <i class="fas fa-cog nav-icon"></i> Team Settings
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="dashboard-header">
+          <h1 id="current-view-title">All Tasks</h1>
+          <div class="header-actions">
+            <div id="user-info">
+              <p>Logged in as: <strong id="user-email"></strong></p>
+            </div>
+            <button class="btn btn-secondary" id="logout-button">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+          </div>
+        </header>
+
+        <section class="task-summary-section">
+          <div class="summary-card">
+            <h2 id="total-tasks-count">0</h2>
+            <p>Total Tasks</p>
+          </div>
+          <div class="summary-card">
+            <h2 id="completed-tasks-count">0</h2>
+            <p>Completed</p>
+          </div>
+          <div class="summary-card">
+            <h2 id="my-tasks-count">0</h2>
+            <p>My Tasks</p>
+          </div>
+          <div class="summary-card">
+            <h2 id="total-members-count">0</h2>
+            <p>Total Members</p>
+            <button id="view-members-btn" class="btn btn-primary btn-sm mt-2">
+              <i class="fas fa-users"></i> View All
+            </button>
+          </div>
+        </section>
+
+        <section class="kanban-board-section">
+          <div id="kanban-board" class="kanban-board">
+            <div id="todo-column" class="kanban-column" data-status="todo">
+              <div class="column-header">
+                <h3>To Do</h3>
+                <span class="task-count" id="todo-count">0</span>
+              </div>
+              <div class="task-list" id="todo-list"></div>
+            </div>
+            <div
+              id="in-progress-column"
+              class="kanban-column"
+              data-status="in_progress"
+            >
+              <div class="column-header">
+                <h3>In Progress</h3>
+                <span class="task-count" id="in-progress-count">0</span>
+              </div>
+              <div class="task-list" id="in-progress-list"></div>
+            </div>
+            <div id="done-column" class="kanban-column" data-status="done">
+              <div class="column-header">
+                <h3>Done</h3>
+                <span class="task-count" id="done-count">0</span>
+              </div>
+              <div class="task-list" id="done-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="action-bar">
+          <button id="create-task-btn" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create Task
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <div id="task-modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <h2 id="task-modal-title">Create New Task</h2>
+        <form id="task-form">
+          <input type="hidden" id="task-id-input" />
+          <div class="form-group">
+            <label for="task-title">Task Title</label>
+            <input
+              id="task-title"
+              type="text"
+              placeholder="Enter task title"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="task-description">Description</label>
+            <textarea
+              id="task-description"
+              placeholder="Enter a brief description"
+            ></textarea>
+          </div>
+          <div class="form-group">
+            <label for="task-status">Status</label>
+            <select id="task-status">
+              <option value="todo">To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="assigned-user">Assigned To</label>
+            <select id="assigned-user"></select>
+          </div>
+          <div class="button-group">
+            <button
+              type="button"
+              id="task-modal-close-btn"
+              class="btn btn-secondary"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              id="task-modal-submit-btn"
+              class="btn btn-primary"
+            >
+              <i class="fas fa-save"></i> Save Task
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="message-modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <h2 id="modal-title"></h2>
+        <p id="modal-message"></p>
+        <div class="button-group">
+          <button id="modal-ok-button" class="btn btn-primary">OK</button>
+          <div id="modal-confirm-buttons" class="confirm-buttons">
+            <button id="modal-confirm-cancel" class="btn btn-secondary">
+              Cancel
+            </button>
+            <button id="modal-confirm-ok" class="btn btn-primary">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="members-modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <h2>Team Members</h2>
+        <p>
+          Total Members:
+          <strong id="members-modal-count">0</strong>
+        </p>
+        <ul id="members-list" class="members-list-ul"></ul>
+        <div class="button-group">
+          <button
+            type="button"
+            id="members-modal-close-btn"
+            class="btn btn-secondary"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="js/tenant.js"></script>
+  </body>
+</html>

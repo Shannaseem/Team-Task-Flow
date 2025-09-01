@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tenant Settings</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="centered-container">
+      <div class="form-container">
+        <div class="form-header">
+          <i class="fas fa-cog form-icon"></i>
+          <h1>Tenant Settings</h1>
+          <p>Update your team's information and preferences.</p>
+        </div>
+        <form id="tenant-form">
+          <div class="form-group">
+            <label for="tenant-name">Team Name</label>
+            <input
+              id="tenant-name"
+              type="text"
+              placeholder="Your team's name"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-full mt-4">
+            <i class="fas fa-save"></i> Update Settings
+          </button>
+        </form>
+        <a href="dashboard.html" class="btn btn-secondary w-full mt-4">
+          <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+      </div>
+    </div>
+
+    <div id="message-modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <h2 id="modal-title"></h2>
+        <p id="modal-message"></p>
+        <div class="button-group">
+          <button id="modal-ok-button" class="btn btn-primary">OK</button>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="js/tenant.js"></script>
+  </body>
+</html>
