@@ -1,61 +1,57 @@
-// js/invite.js
-
-import { showMessageWithIcon, getToken, API_URL, logout } from "./utils.js";
+// frontend/js/invite.js
+import {
+  showMessageWithIcon,
+  getToken,
+  API_URL,
+  initializeModalListeners,
+} from "./utils.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const token = getToken();
-  if (!token) {
-    logout();
-  }
+  initializeModalListeners();
 
-  const inviteForm = document.getElementById("invite-form");
-  const userEmailInput = document.getElementById("user-email");
-  const tempPasswordInput = document.getElementById("temp-password");
-  const userRoleInput = document.getElementById("user-role");
-
-  const INVITE_ENDPOINT = `${API_URL}/users/invite`;
-
-  if (inviteForm) {
-    inviteForm.addEventListener("submit", async (e) => {
+  const form = document.getElementById("invite-form");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const email = document.getElementById("invite-email")?.value?.trim();
 
-      const email = userEmailInput.value;
-      const password = tempPasswordInput.value;
-      const role = userRoleInput.value;
+      if (!email || !email.match(/^\S+@\S+\.\S+$/)) {
+        showMessageWithIcon(
+          "Error",
+          "Please enter a valid email address.",
+          "error"
+        );
+        return;
+      }
 
       try {
-        const response = await fetch(INVITE_ENDPOINT, {
+        const token = getToken();
+        const response = await fetch(`${API_URL}/users/invite`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ email, password, role }),
+          body: JSON.stringify({ email }),
         });
-
         const data = await response.json();
-
         if (response.ok) {
           showMessageWithIcon(
-            "Success!",
-            `User ${email} has been successfully invited.`,
+            "Success",
+            `Invitation sent to ${email}.`,
             "success"
           );
-          inviteForm.reset();
+          form.reset();
         } else {
           showMessageWithIcon(
-            "Invitation Failed",
-            data.detail || "Failed to invite user.",
+            "Error",
+            data.detail || "Failed to send invitation.",
             "error"
           );
         }
       } catch (error) {
-        console.error("Invitation error:", error);
-        showMessageWithIcon(
-          "Error",
-          "An unexpected error occurred. Please try again.",
-          "error"
-        );
+        console.error("Invite error:", error);
+        showMessageWithIcon("Error", "An unexpected error occurred.", "error");
       }
     });
   }

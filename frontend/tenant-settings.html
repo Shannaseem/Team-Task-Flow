@@ -3,50 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tenant Settings</title>
+    <title>TaskFlow - Team Settings</title>
     <link rel="stylesheet" href="css/styles.css" />
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
     />
+    <link rel="stylesheet" href="fontawesome-free-7.0.0-web/css/all.min.css" />
   </head>
   <body>
-    <div class="centered-container">
-      <div class="form-container">
-        <div class="form-header">
-          <i class="fas fa-cog form-icon"></i>
-          <h1>Tenant Settings</h1>
-          <p>Update your team's information and preferences.</p>
-        </div>
-        <form id="tenant-form">
-          <div class="form-group">
-            <label for="tenant-name">Team Name</label>
-            <input
-              id="tenant-name"
-              type="text"
-              placeholder="Your team's name"
-              required
-            />
-          </div>
-          <button type="submit" class="btn btn-primary w-full mt-4">
-            <i class="fas fa-save"></i> Update Settings
-          </button>
+    <div class="container">
+      <main class="auth-container">
+        <h1>TaskFlow</h1>
+        <h2>Team Settings</h2>
+        <form id="tenant-settings-form">
+          <label for="tenant-name-input">Team Name</label>
+          <input type="text" id="tenant-name-input" required />
+          <button type="submit">Update</button>
+          <a href="dashboard.html" class="btn">Back to Dashboard</a>
         </form>
-        <a href="dashboard.html" class="btn btn-secondary w-full mt-4">
-          <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
+      </main>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="message-modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <span class="modal-close-btn" onclick="closeAllModals()">&times;</span>
+        <div class="modal-body">
+          <span id="message-icon" class="modal-icon"></span>
+          <h2 id="message-title"></h2>
+          <p id="message-text"></p>
+        </div>
+        <button id="message-ok-btn" onclick="closeAllModals()">OK</button>
       </div>
     </div>
 
-    <div id="message-modal-overlay" class="modal-overlay">
-      <div class="modal-content">
-        <h2 id="modal-title"></h2>
-        <p id="modal-message"></p>
-        <div class="button-group">
-          <button id="modal-ok-button" class="btn btn-primary">OK</button>
-        </div>
-      </div>
-    </div>
-    <script type="module" src="js/tenant.js"></script>
+    <script src="js/utils.js" type="module"></script>
+    <script src="js/tenant-settings.js" type="module"></script>
   </body>
 </html>

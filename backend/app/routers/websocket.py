@@ -1,3 +1,5 @@
+# backend/app/routers/websocket.py
+
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 from typing import Dict, List
 import json
@@ -38,6 +40,5 @@ async def websocket_endpoint(websocket: WebSocket, tenant_id: str):
             data = await websocket.receive_text()
             # If a message is received, you can handle it here if needed.
             print(f"Received message from client {tenant_id}: {data}")
-
     except WebSocketDisconnect:
         manager.disconnect(websocket, tenant_id)

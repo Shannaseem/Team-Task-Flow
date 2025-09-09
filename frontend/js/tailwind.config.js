@@ -7,13 +7,15 @@ module.exports = {
     extend: {
       colors: {
         "primary-blue": "#3B82F6",
-        "primary-dark": "#111827",
-        "card-dark": "#1F2937",
-        "text-light": "#F3F4F6",
-        "text-secondary": "#9CA3AF",
-        "border-dark": "#374151",
+        "background-light": "#F3F4F6",
+        "text-dark": "#1F2937",
+        "card-background": "#ffffff",
+        "sidebar-background": "#1F2937",
+        "border-color": "#D1D5DB",
+        "input-background": "#ffffff",
         "success-green": "#10B981",
         "danger-red": "#EF4444",
+        "secondary-gray": "#9CA3AF",
       },
       fontFamily: {
         inter: ["Inter", "sans-serif"],

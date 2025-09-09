@@ -1,114 +1,172 @@
-// js/auth.js
+import {
+  API_URL,
+  getToken,
+  logout,
+  showMessageWithIcon,
+  initializeModalListeners,
+} from "./utils.js";
 
-import { showMessage, showMessageWithIcon, API_URL } from "./utils.js";
-
-// --------- LOGIN FORM HANDLER ----------
-document.getElementById("login-form")?.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email")?.value;
-  const password = document.getElementById("password")?.value;
-
-  if (!email || !password) {
-    showMessageWithIcon("Error", "Please fill in all fields.", "error");
+document.addEventListener("DOMContentLoaded", () => {
+  const token = getToken();
+  if (token) {
+    window.location.href = "dashboard.html";
     return;
   }
 
-  try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  const loadingScreen = document.getElementById("loading-screen");
+  if (loadingScreen) loadingScreen.style.display = "none"; // Hide on load if no token
 
-    const data = await response.json();
+  initializeModalListeners(); // Initialize modal close listeners
 
-    if (response.ok) {
-      // Step 1: JWT token ko turant save karein
-      localStorage.setItem("token", data.access_token);
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email")?.value?.trim();
+      const password = document.getElementById("password")?.value;
 
-      // Step 2: Success message dikhayein
-      showMessageWithIcon("Success!", "Login successful.", "success");
+      if (!loadingScreen) return; // Safety check
+      loadingScreen.style.display = "flex"; // Show loading
 
-      // Step 3: Redirect karne se pehle 2 seconds ka wait karein
-      setTimeout(() => {
-        window.location.href = "dashboard.html";
-      }, 2000);
-    } else {
-      // Login fail hone par error message dikhayein
-      showMessageWithIcon(
-        "Login Failed",
-        data.detail || "Login failed",
-        "error"
-      );
-    }
-  } catch (error) {
-    console.error("Login error:", error);
-    showMessageWithIcon(
-      "Error",
-      "An unexpected error occurred. Please try again.",
-      "error"
-    );
-  }
-});
-
-// --------- SIGNUP FORM HANDLER ----------
-document
-  .getElementById("signup-form")
-  ?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const tenantName = document.getElementById("tenant-name")?.value;
-    const email = document.getElementById("email")?.value;
-    const password = document.getElementById("password")?.value;
-
-    try {
-      const response = await fetch(`${API_URL}/auth/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tenant_name: tenantName, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // **Yahan badlaav kiya gaya hai**
-        // Signup successful. Ab token save karein aur dashboard par redirect karein.
-        localStorage.setItem("token", data.access_token);
+      if (!email || !password) {
+        loadingScreen.style.display = "none";
         showMessageWithIcon(
-          "Success!",
-          "Account created successfully. Redirecting to dashboard...",
-          "success"
+          "Error",
+          "Email and password are required.",
+          "error"
         );
-        setTimeout(() => {
-          window.location.href = "dashboard.html"; // Seedha dashboard par redirect
-        }, 2000);
-      } else {
-        // Signup error ko handle karein
-        if (data.detail === "Email pehle se registerd hai") {
-          showMessageWithIcon(
-            "Signup Failed",
-            "This email is already registered. Please use a different email or log in.",
-            "error"
-          );
-        } else if (data.detail === "Team name pehle se registerd hai") {
-          showMessageWithIcon(
-            "Signup Failed",
-            "This team name is already taken. Please choose a different one.",
-            "error"
-          );
+        return;
+      }
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        loadingScreen.style.display = "none";
+        showMessageWithIcon(
+          "Error",
+          "Please enter a valid email address.",
+          "error"
+        );
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+
+        console.log("Login response:", data);
+        if (response.ok) {
+          if (data.access_token) {
+            localStorage.setItem("token", data.access_token);
+            showMessageWithIcon("Success", "Login successful!", "success");
+            setTimeout(() => (window.location.href = "dashboard.html"), 1500);
+          } else {
+            loadingScreen.style.display = "none";
+            showMessageWithIcon(
+              "Error",
+              "No token received from server.",
+              "error"
+            );
+          }
         } else {
+          loadingScreen.style.display = "none";
           showMessageWithIcon(
-            "Signup Failed",
-            data.detail || "Signup failed",
+            "Error",
+            data.detail || "Login failed. Please try again.",
             "error"
           );
         }
+      } catch (error) {
+        console.error("Login error:", error);
+        loadingScreen.style.display = "none";
+        showMessageWithIcon(
+          "Error",
+          "Unable to connect to server. Check your network.",
+          "error"
+        );
       }
-    } catch (error) {
-      console.error("Signup error:", error);
-      showMessageWithIcon(
-        "Error",
-        "An unexpected error occurred. Please try again.",
-        "error"
-      );
-    }
-  });
+    });
+  }
+
+  const signupForm = document.getElementById("signup-form");
+  if (signupForm) {
+    signupForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const tenantName = document.getElementById("tenant-name")?.value?.trim();
+      const email = document.getElementById("email")?.value?.trim();
+      const password = document.getElementById("password")?.value;
+
+      if (!loadingScreen) return; // Safety check
+      loadingScreen.style.display = "flex"; // Show loading
+
+      if (!tenantName || !email || !password) {
+        loadingScreen.style.display = "none";
+        showMessageWithIcon("Error", "All fields are required.", "error");
+        return;
+      }
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        loadingScreen.style.display = "none";
+        showMessageWithIcon(
+          "Error",
+          "Please enter a valid email address.",
+          "error"
+        );
+        return;
+      }
+      if (password.length < 8) {
+        loadingScreen.style.display = "none";
+        showMessageWithIcon(
+          "Error",
+          "Password must be at least 8 characters long.",
+          "error"
+        );
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/auth/signup`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ tenant_name: tenantName, email, password }),
+        });
+        const data = await response.json();
+
+        console.log("Signup response:", data);
+        if (response.ok) {
+          if (data.access_token) {
+            localStorage.setItem("token", data.access_token);
+            showMessageWithIcon(
+              "Success",
+              "Signup successful! Redirecting...",
+              "success"
+            );
+            setTimeout(() => (window.location.href = "dashboard.html"), 2000);
+          } else {
+            loadingScreen.style.display = "none";
+            showMessageWithIcon(
+              "Error",
+              "No token received from server.",
+              "error"
+            );
+          }
+        } else {
+          loadingScreen.style.display = "none";
+          showMessageWithIcon(
+            "Error",
+            data.detail || "Signup failed. Please try again.",
+            "error"
+          );
+        }
+      } catch (error) {
+        console.error("Signup error:", error);
+        loadingScreen.style.display = "none";
+        showMessageWithIcon(
+          "Error",
+          "Unable to connect to server. Check your network.",
+          "error"
+        );
+      }
+    });
+  }
+});

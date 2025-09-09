@@ -3,131 +3,135 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TeamFlow Dashboard</title>
+    <title>TaskFlow</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
+    <script src="js/utils.js" type="module"></script>
+    <script src="js/dashboard.js" type="module"></script>
+    <link rel="stylesheet" href="fontawesome-free-7.0.0-web/css/all.min.css" />
   </head>
   <body>
-    <div class="dashboard-container">
-      <aside class="sidebar">
-        <div class="logo-section">
-          <i class="fas fa-sitemap logo-icon"></i>
-          <h3 id="tenant-name">TaskFlow</h3>
+    <div id="loading-screen" class="loading-overlay">
+      <div class="spinner"></div>
+      <p>Loading dashboard...</p>
+    </div>
+
+    <header class="top-navbar">
+      <div class="navbar-brand">
+        <i class="fas fa-tasks"></i>
+        <span>TaskFlow</span>
+      </div>
+      <div class="navbar-actions">
+        <div class="user-profile">
+          <span id="user-email">user@example.com</span>
+          <div class="dropdown-menu">
+            <a href="#"><i class="fas fa-user"></i> Profile</a>
+            <a href="#" id="logout-button"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </div>
         </div>
-        <nav class="main-nav">
-          <ul>
-            <li id="all-tasks-link" class="active">
-              <i class="fas fa-th-list nav-icon"></i> All Tasks
-            </li>
-            <li id="my-tasks-link">
-              <i class="fas fa-user nav-icon"></i> My Tasks
-            </li>
-            <li id="invite-link">
-              <i class="fas fa-user-plus nav-icon"></i> Invite User
-            </li>
-            <li id="settings-link">
-              <i class="fas fa-cog nav-icon"></i> Team Settings
-            </li>
-          </ul>
+      </div>
+    </header>
+
+    <div class="container">
+      <aside class="fixed-sidebar">
+        <div class="sidebar-header">
+          <div class="app-name"><i class="fas fa-tasks"></i> TaskFlow</div>
+          <button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        </div>
+        <nav>
+          <a href="#" class="sidebar-btn active" id="dashboard-btn"
+            ><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a
+          >
+          <a href="#" class="sidebar-btn" id="my-tasks-btn"
+            ><i class="fas fa-tasks"></i> <span>My Tasks</span></a
+          >
+          <a href="#" class="sidebar-btn" id="team-members-btn"
+            ><i class="fas fa-users"></i> <span>Team Members</span></a
+          >
+          <a href="#" class="sidebar-btn" id="settings-btn"
+            ><i class="fas fa-cog"></i> <span>Settings</span></a
+          >
         </nav>
+        <div class="sidebar-footer">
+          <a href="#" id="logout-button-footer"
+            ><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a
+          >
+          <p>© 2025 TaskFlow</p>
+        </div>
       </aside>
 
       <main class="main-content">
-        <header class="dashboard-header">
-          <h1 id="current-view-title">All Tasks</h1>
-          <div class="header-actions">
-            <div id="user-info">
-              <p>Logged in as: <strong id="user-email"></strong></p>
-            </div>
-            <button class="btn btn-secondary" id="logout-button">
-              <i class="fas fa-sign-out-alt"></i> Logout
+        <div class="dashboard-header">
+          <h1>Team Dashboard <span id="tenant-name"></span></h1>
+          <div class="dashboard-actions">
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Search tasks..."
+              id="search-tasks"
+            />
+            <button id="create-task-btn" class="btn btn-primary">
+              <i class="fas fa-plus"></i> New Task
             </button>
           </div>
-        </header>
+        </div>
 
-        <section class="task-summary-section">
+        <div class="summary-cards">
           <div class="summary-card">
-            <h2 id="total-tasks-count">0</h2>
+            <h3 id="total-tasks-count">0</h3>
             <p>Total Tasks</p>
           </div>
           <div class="summary-card">
-            <h2 id="completed-tasks-count">0</h2>
-            <p>Completed</p>
+            <h3 id="todo-count">0</h3>
+            <p>To Do</p>
           </div>
           <div class="summary-card">
-            <h2 id="my-tasks-count">0</h2>
-            <p>My Tasks</p>
+            <h3 id="in-progress-count">0</h3>
+            <p>In Progress</p>
           </div>
           <div class="summary-card">
-            <h2 id="total-members-count">0</h2>
-            <p>Total Members</p>
-            <button id="view-members-btn" class="btn btn-primary btn-sm mt-2">
-              <i class="fas fa-users"></i> View All
-            </button>
+            <h3 id="done-count">0</h3>
+            <p>Done</p>
           </div>
-        </section>
+        </div>
 
-        <section class="kanban-board-section">
-          <div id="kanban-board" class="kanban-board">
-            <div id="todo-column" class="kanban-column" data-status="todo">
-              <div class="column-header">
-                <h3>To Do</h3>
-                <span class="task-count" id="todo-count">0</span>
-              </div>
-              <div class="task-list" id="todo-list"></div>
-            </div>
-            <div
-              id="in-progress-column"
-              class="kanban-column"
-              data-status="in_progress"
-            >
-              <div class="column-header">
-                <h3>In Progress</h3>
-                <span class="task-count" id="in-progress-count">0</span>
-              </div>
-              <div class="task-list" id="in-progress-list"></div>
-            </div>
-            <div id="done-column" class="kanban-column" data-status="done">
-              <div class="column-header">
-                <h3>Done</h3>
-                <span class="task-count" id="done-count">0</span>
-              </div>
-              <div class="task-list" id="done-list"></div>
-            </div>
+        <div class="task-board">
+          <div class="task-column" data-status="todo">
+            <h2>To Do</h2>
+            <div class="tasks-column" id="todo-column"></div>
           </div>
-        </section>
-
-        <div class="action-bar">
-          <button id="create-task-btn" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Create Task
-          </button>
+          <div class="task-column" data-status="in_progress">
+            <h2>In Progress</h2>
+            <div class="tasks-column" id="in-progress-column"></div>
+          </div>
+          <div class="task-column" data-status="done">
+            <h2>Done</h2>
+            <div class="tasks-column" id="done-column"></div>
+          </div>
         </div>
       </main>
     </div>
 
-    <div id="task-modal-overlay" class="modal-overlay">
+    <div class="modal-overlay" id="task-modal-overlay">
       <div class="modal-content">
+        <button class="modal-close-btn">×</button>
         <h2 id="task-modal-title">Create New Task</h2>
         <form id="task-form">
-          <input type="hidden" id="task-id-input" />
           <div class="form-group">
-            <label for="task-title">Task Title</label>
-            <input
-              id="task-title"
-              type="text"
-              placeholder="Enter task title"
-              required
-            />
+            <label for="task-title">Title</label>
+            <input type="text" id="task-title" required />
+            <input type="hidden" id="task-id" />
           </div>
           <div class="form-group">
             <label for="task-description">Description</label>
-            <textarea
-              id="task-description"
-              placeholder="Enter a brief description"
-            ></textarea>
+            <textarea id="task-description"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="assigned-user">Assign To</label>
+            <select id="assigned-user">
+              <option value="">Unassigned</option>
+            </select>
           </div>
           <div class="form-group">
             <label for="task-status">Status</label>
@@ -138,66 +142,131 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="assigned-user">Assigned To</label>
-            <select id="assigned-user"></select>
+            <label for="due-date">Due Date</label>
+            <input type="date" id="due-date" />
           </div>
-          <div class="button-group">
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Task</button>
             <button
               type="button"
-              id="task-modal-close-btn"
               class="btn btn-secondary"
+              id="task-cancel-btn"
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              id="task-modal-submit-btn"
-              class="btn btn-primary"
-            >
-              <i class="fas fa-save"></i> Save Task
             </button>
           </div>
         </form>
       </div>
     </div>
 
-    <div id="message-modal-overlay" class="modal-overlay">
+    <div class="modal-overlay" id="members-modal">
       <div class="modal-content">
-        <h2 id="modal-title"></h2>
-        <p id="modal-message"></p>
-        <div class="button-group">
-          <button id="modal-ok-button" class="btn btn-primary">OK</button>
-          <div id="modal-confirm-buttons" class="confirm-buttons">
-            <button id="modal-confirm-cancel" class="btn btn-secondary">
-              Cancel
-            </button>
-            <button id="modal-confirm-ok" class="btn btn-primary">
-              Confirm
-            </button>
-          </div>
-        </div>
+        <button class="modal-close-btn">×</button>
+        <h2>Team Members</h2>
+        <button class="btn btn-primary" id="invite-user-btn">
+          <i class="fas fa-user-plus"></i> Invite User
+        </button>
+        <ul id="members-list" class="members-list"></ul>
+        <button class="btn btn-secondary modal-close-btn">Close</button>
       </div>
     </div>
 
-    <div id="members-modal-overlay" class="modal-overlay">
+    <div class="modal-overlay" id="invite-modal">
       <div class="modal-content">
-        <h2>Team Members</h2>
-        <p>
-          Total Members:
-          <strong id="members-modal-count">0</strong>
-        </p>
-        <ul id="members-list" class="members-list-ul"></ul>
-        <div class="button-group">
-          <button
-            type="button"
-            id="members-modal-close-btn"
-            class="btn btn-secondary"
-          >
-            Close
+        <button class="modal-close-btn">×</button>
+        <h2>Invite New Member</h2>
+        <form id="invite-form">
+          <div class="form-group">
+            <label for="invite-email">Email Address</label>
+            <input type="email" id="invite-email" required />
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              Send Invitation
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="invite-cancel-btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="settings-modal">
+      <div class="modal-content">
+        <button class="modal-close-btn">×</button>
+        <h2>Settings</h2>
+        <div
+          id="settings-admin-message"
+          style="display: none; color: #ef4444; margin-bottom: 1rem"
+        >
+          Only admins can update team settings.
+        </div>
+        <form id="settings-form">
+          <div class="form-group">
+            <label for="tenant-name-input">Team Name</label>
+            <input type="text" id="tenant-name-input" required />
+          </div>
+          <div class="form-group">
+            <label for="timezone">Timezone</label>
+            <select id="timezone">
+              <option value="UTC">UTC</option>
+              <option value="PST">PST</option>
+              <option value="IST">IST</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="settings-save-btn"
+            >
+              Save Settings
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="settings-cancel-btn"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="message-modal-overlay">
+      <div class="modal-content">
+        <i class="modal-icon" id="message-icon"></i>
+        <h2 id="message-title"></h2>
+        <p id="message-text"></p>
+        <button class="btn btn-primary" id="message-ok-btn">OK</button>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="confirm-modal-overlay">
+      <div class="modal-content">
+        <h2 id="confirm-title"></h2>
+        <p id="confirm-message"></p>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="confirm-ok-btn">Confirm</button>
+          <button class="btn btn-secondary" id="confirm-cancel-btn">
+            Cancel
           </button>
         </div>
       </div>
     </div>
-    <script type="module" src="js/tenant.js"></script>
   </body>
 </html>

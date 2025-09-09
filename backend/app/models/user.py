@@ -1,19 +1,22 @@
-# app/models/user.py
-
-from sqlalchemy import Column, Integer, String, ForeignKey
+# backend/app/models/user.py
+from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from app.database import Base
+import enum
+
+class UserRole(str, enum.Enum):
+    admin = "admin"
+    member = "member"
 
 class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String)
     tenant_id = Column(Integer, ForeignKey("tenants.id"))
-    role = Column(String, default="member")
+    role = Column(Enum(UserRole), default=UserRole.member)
 
     tenant = relationship("Tenant", back_populates="users")
-    # Fix: Explicitly define the foreign key for 'tasks'
-    tasks = relationship("Task", back_populates="user", foreign_keys='[Task.user_id]')
-    assigned_tasks = relationship("Task", back_populates="assigned_user", foreign_keys='[Task.assigned_user_id]')
+    tasks_created = relationship("Task", foreign_keys="Task.user_id", back_populates="creator")
+    tasks_assigned = relationship("Task", foreign_keys="Task.assigned_user_id", back_populates="assignee")

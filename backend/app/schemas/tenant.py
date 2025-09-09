@@ -1,3 +1,5 @@
+# backend/app/schemas/tenant.py
+
 from pydantic import BaseModel
 from typing import Optional
 
@@ -8,7 +10,7 @@ class TenantCreate(TenantBase):
     pass
 
 class TenantUpdate(BaseModel):
-    name: Optional[str] = None
+    name: str
 
 class TenantOut(TenantBase):
     id: int
